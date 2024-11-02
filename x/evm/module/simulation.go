@@ -23,7 +23,11 @@ var (
 )
 
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgEthereumTx = "op_weight_msg_ethereum_tx"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgEthereumTx int = 100
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module.
@@ -46,6 +50,17 @@ func (am AppModule) RegisterStoreDecoder(_ simtypes.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
+	var weightMsgEthereumTx int
+	simState.AppParams.GetOrGenerate(opWeightMsgEthereumTx, &weightMsgEthereumTx, nil,
+		func(_ *rand.Rand) {
+			weightMsgEthereumTx = defaultWeightMsgEthereumTx
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgEthereumTx,
+		evmsimulation.SimulateMsgEthereumTx(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
 	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
@@ -54,6 +69,14 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 // ProposalMsgs returns msgs used for governance proposals for simulations.
 func (am AppModule) ProposalMsgs(simState module.SimulationState) []simtypes.WeightedProposalMsg {
 	return []simtypes.WeightedProposalMsg{
+		simulation.NewWeightedProposalMsg(
+			opWeightMsgEthereumTx,
+			defaultWeightMsgEthereumTx,
+			func(r *rand.Rand, ctx sdk.Context, accs []simtypes.Account) sdk.Msg {
+				evmsimulation.SimulateMsgEthereumTx(am.accountKeeper, am.bankKeeper, am.keeper)
+				return nil
+			},
+		),
 		// this line is used by starport scaffolding # simapp/module/OpMsg
 	}
 }
