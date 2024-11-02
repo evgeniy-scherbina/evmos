@@ -4,6 +4,7 @@ package evm
 import (
 	_ "cosmossdk.io/api/amino"
 	_ "cosmossdk.io/api/cosmos/msg/v1"
+	binary "encoding/binary"
 	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
@@ -11,7 +12,9 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 	io "io"
+	math "math"
 	reflect "reflect"
 	sync "sync"
 )
@@ -874,12 +877,20 @@ func (x *fastReflection_MsgUpdateParamsResponse) ProtoMethods() *protoiface.Meth
 var (
 	md_MsgEthereumTx         protoreflect.MessageDescriptor
 	fd_MsgEthereumTx_creator protoreflect.FieldDescriptor
+	fd_MsgEthereumTx_data    protoreflect.FieldDescriptor
+	fd_MsgEthereumTx_size    protoreflect.FieldDescriptor
+	fd_MsgEthereumTx_hash    protoreflect.FieldDescriptor
+	fd_MsgEthereumTx_from    protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_evmos_evm_tx_proto_init()
 	md_MsgEthereumTx = File_evmos_evm_tx_proto.Messages().ByName("MsgEthereumTx")
 	fd_MsgEthereumTx_creator = md_MsgEthereumTx.Fields().ByName("creator")
+	fd_MsgEthereumTx_data = md_MsgEthereumTx.Fields().ByName("data")
+	fd_MsgEthereumTx_size = md_MsgEthereumTx.Fields().ByName("size")
+	fd_MsgEthereumTx_hash = md_MsgEthereumTx.Fields().ByName("hash")
+	fd_MsgEthereumTx_from = md_MsgEthereumTx.Fields().ByName("from")
 }
 
 var _ protoreflect.Message = (*fastReflection_MsgEthereumTx)(nil)
@@ -953,6 +964,30 @@ func (x *fastReflection_MsgEthereumTx) Range(f func(protoreflect.FieldDescriptor
 			return
 		}
 	}
+	if x.Data != nil {
+		value := protoreflect.ValueOfMessage(x.Data.ProtoReflect())
+		if !f(fd_MsgEthereumTx_data, value) {
+			return
+		}
+	}
+	if x.Size != float64(0) || math.Signbit(x.Size) {
+		value := protoreflect.ValueOfFloat64(x.Size)
+		if !f(fd_MsgEthereumTx_size, value) {
+			return
+		}
+	}
+	if x.Hash != "" {
+		value := protoreflect.ValueOfString(x.Hash)
+		if !f(fd_MsgEthereumTx_hash, value) {
+			return
+		}
+	}
+	if x.From != "" {
+		value := protoreflect.ValueOfString(x.From)
+		if !f(fd_MsgEthereumTx_from, value) {
+			return
+		}
+	}
 }
 
 // Has reports whether a field is populated.
@@ -970,6 +1005,14 @@ func (x *fastReflection_MsgEthereumTx) Has(fd protoreflect.FieldDescriptor) bool
 	switch fd.FullName() {
 	case "evmos.evm.MsgEthereumTx.creator":
 		return x.Creator != ""
+	case "evmos.evm.MsgEthereumTx.data":
+		return x.Data != nil
+	case "evmos.evm.MsgEthereumTx.size":
+		return x.Size != float64(0) || math.Signbit(x.Size)
+	case "evmos.evm.MsgEthereumTx.hash":
+		return x.Hash != ""
+	case "evmos.evm.MsgEthereumTx.from":
+		return x.From != ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: evmos.evm.MsgEthereumTx"))
@@ -988,6 +1031,14 @@ func (x *fastReflection_MsgEthereumTx) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
 	case "evmos.evm.MsgEthereumTx.creator":
 		x.Creator = ""
+	case "evmos.evm.MsgEthereumTx.data":
+		x.Data = nil
+	case "evmos.evm.MsgEthereumTx.size":
+		x.Size = float64(0)
+	case "evmos.evm.MsgEthereumTx.hash":
+		x.Hash = ""
+	case "evmos.evm.MsgEthereumTx.from":
+		x.From = ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: evmos.evm.MsgEthereumTx"))
@@ -1006,6 +1057,18 @@ func (x *fastReflection_MsgEthereumTx) Get(descriptor protoreflect.FieldDescript
 	switch descriptor.FullName() {
 	case "evmos.evm.MsgEthereumTx.creator":
 		value := x.Creator
+		return protoreflect.ValueOfString(value)
+	case "evmos.evm.MsgEthereumTx.data":
+		value := x.Data
+		return protoreflect.ValueOfMessage(value.ProtoReflect())
+	case "evmos.evm.MsgEthereumTx.size":
+		value := x.Size
+		return protoreflect.ValueOfFloat64(value)
+	case "evmos.evm.MsgEthereumTx.hash":
+		value := x.Hash
+		return protoreflect.ValueOfString(value)
+	case "evmos.evm.MsgEthereumTx.from":
+		value := x.From
 		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
@@ -1029,6 +1092,14 @@ func (x *fastReflection_MsgEthereumTx) Set(fd protoreflect.FieldDescriptor, valu
 	switch fd.FullName() {
 	case "evmos.evm.MsgEthereumTx.creator":
 		x.Creator = value.Interface().(string)
+	case "evmos.evm.MsgEthereumTx.data":
+		x.Data = value.Message().Interface().(*anypb.Any)
+	case "evmos.evm.MsgEthereumTx.size":
+		x.Size = value.Float()
+	case "evmos.evm.MsgEthereumTx.hash":
+		x.Hash = value.Interface().(string)
+	case "evmos.evm.MsgEthereumTx.from":
+		x.From = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: evmos.evm.MsgEthereumTx"))
@@ -1049,8 +1120,19 @@ func (x *fastReflection_MsgEthereumTx) Set(fd protoreflect.FieldDescriptor, valu
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_MsgEthereumTx) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
+	case "evmos.evm.MsgEthereumTx.data":
+		if x.Data == nil {
+			x.Data = new(anypb.Any)
+		}
+		return protoreflect.ValueOfMessage(x.Data.ProtoReflect())
 	case "evmos.evm.MsgEthereumTx.creator":
 		panic(fmt.Errorf("field creator of message evmos.evm.MsgEthereumTx is not mutable"))
+	case "evmos.evm.MsgEthereumTx.size":
+		panic(fmt.Errorf("field size of message evmos.evm.MsgEthereumTx is not mutable"))
+	case "evmos.evm.MsgEthereumTx.hash":
+		panic(fmt.Errorf("field hash of message evmos.evm.MsgEthereumTx is not mutable"))
+	case "evmos.evm.MsgEthereumTx.from":
+		panic(fmt.Errorf("field from of message evmos.evm.MsgEthereumTx is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: evmos.evm.MsgEthereumTx"))
@@ -1065,6 +1147,15 @@ func (x *fastReflection_MsgEthereumTx) Mutable(fd protoreflect.FieldDescriptor) 
 func (x *fastReflection_MsgEthereumTx) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
 	case "evmos.evm.MsgEthereumTx.creator":
+		return protoreflect.ValueOfString("")
+	case "evmos.evm.MsgEthereumTx.data":
+		m := new(anypb.Any)
+		return protoreflect.ValueOfMessage(m.ProtoReflect())
+	case "evmos.evm.MsgEthereumTx.size":
+		return protoreflect.ValueOfFloat64(float64(0))
+	case "evmos.evm.MsgEthereumTx.hash":
+		return protoreflect.ValueOfString("")
+	case "evmos.evm.MsgEthereumTx.from":
 		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
@@ -1139,6 +1230,21 @@ func (x *fastReflection_MsgEthereumTx) ProtoMethods() *protoiface.Methods {
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
+		if x.Data != nil {
+			l = options.Size(x.Data)
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.Size != 0 || math.Signbit(x.Size) {
+			n += 9
+		}
+		l = len(x.Hash)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.From)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
 		}
@@ -1172,6 +1278,40 @@ func (x *fastReflection_MsgEthereumTx) ProtoMethods() *protoiface.Methods {
 			i -= len(x.Creator)
 			copy(dAtA[i:], x.Creator)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Creator)))
+			i--
+			dAtA[i] = 0x2a
+		}
+		if len(x.From) > 0 {
+			i -= len(x.From)
+			copy(dAtA[i:], x.From)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.From)))
+			i--
+			dAtA[i] = 0x22
+		}
+		if len(x.Hash) > 0 {
+			i -= len(x.Hash)
+			copy(dAtA[i:], x.Hash)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Hash)))
+			i--
+			dAtA[i] = 0x1a
+		}
+		if x.Size != 0 || math.Signbit(x.Size) {
+			i -= 8
+			binary.LittleEndian.PutUint64(dAtA[i:], uint64(math.Float64bits(float64(x.Size))))
+			i--
+			dAtA[i] = 0x11
+		}
+		if x.Data != nil {
+			encoded, err := options.Marshal(x.Data)
+			if err != nil {
+				return protoiface.MarshalOutput{
+					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+					Buf:               input.Buf,
+				}, err
+			}
+			i -= len(encoded)
+			copy(dAtA[i:], encoded)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
 			i--
 			dAtA[i] = 0xa
 		}
@@ -1224,7 +1364,7 @@ func (x *fastReflection_MsgEthereumTx) ProtoMethods() *protoiface.Methods {
 				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: MsgEthereumTx: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
-			case 1:
+			case 5:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
 				}
@@ -1255,6 +1395,117 @@ func (x *fastReflection_MsgEthereumTx) ProtoMethods() *protoiface.Methods {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
 				x.Creator = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 1:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if x.Data == nil {
+					x.Data = &anypb.Any{}
+				}
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.Data); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 2:
+				if wireType != 1 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Size", wireType)
+				}
+				var v uint64
+				if (iNdEx + 8) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				v = uint64(binary.LittleEndian.Uint64(dAtA[iNdEx:]))
+				iNdEx += 8
+				x.Size = float64(math.Float64frombits(v))
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Hash", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Hash = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 4:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field From", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.From = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
@@ -1734,12 +1985,23 @@ func (*MsgUpdateParamsResponse) Descriptor() ([]byte, []int) {
 	return file_evmos_evm_tx_proto_rawDescGZIP(), []int{1}
 }
 
+// MsgEthereumTx encapsulates an Ethereum transaction as an SDK message.
 type MsgEthereumTx struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Creator string `protobuf:"bytes,5,opt,name=creator,proto3" json:"creator,omitempty"`
+	// data is inner transaction data of the Ethereum transaction
+	Data *anypb.Any `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	// size is the encoded storage size of the transaction (DEPRECATED)
+	Size float64 `protobuf:"fixed64,2,opt,name=size,proto3" json:"size,omitempty"`
+	// hash of the transaction in hex format
+	Hash string `protobuf:"bytes,3,opt,name=hash,proto3" json:"hash,omitempty"`
+	// from is the ethereum signer address in hex format. This address value is checked
+	// against the address derived from the signature (V, R, S) using the
+	// secp256k1 elliptic curve
+	From string `protobuf:"bytes,4,opt,name=from,proto3" json:"from,omitempty"`
 }
 
 func (x *MsgEthereumTx) Reset() {
@@ -1765,6 +2027,34 @@ func (*MsgEthereumTx) Descriptor() ([]byte, []int) {
 func (x *MsgEthereumTx) GetCreator() string {
 	if x != nil {
 		return x.Creator
+	}
+	return ""
+}
+
+func (x *MsgEthereumTx) GetData() *anypb.Any {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *MsgEthereumTx) GetSize() float64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *MsgEthereumTx) GetHash() string {
+	if x != nil {
+		return x.Hash
+	}
+	return ""
+}
+
+func (x *MsgEthereumTx) GetFrom() string {
+	if x != nil {
+		return x.From
 	}
 	return ""
 }
@@ -1807,22 +2097,32 @@ var file_evmos_evm_tx_proto_rawDesc = []byte{
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x14, 0x67, 0x6f, 0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x16, 0x65, 0x76,
 	0x6d, 0x6f, 0x73, 0x2f, 0x65, 0x76, 0x6d, 0x2f, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x22, 0xaf, 0x01, 0x0a, 0x0f, 0x4d, 0x73, 0x67, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x36, 0x0a, 0x09, 0x61, 0x75, 0x74, 0x68,
-	0x6f, 0x72, 0x69, 0x74, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d,
-	0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53,
-	0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x09, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x74, 0x79,
-	0x12, 0x34, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b,
-	0x32, 0x11, 0x2e, 0x65, 0x76, 0x6d, 0x6f, 0x73, 0x2e, 0x65, 0x76, 0x6d, 0x2e, 0x50, 0x61, 0x72,
-	0x61, 0x6d, 0x73, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06,
-	0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x3a, 0x2e, 0x82, 0xe7, 0xb0, 0x2a, 0x09, 0x61, 0x75, 0x74,
-	0x68, 0x6f, 0x72, 0x69, 0x74, 0x79, 0x8a, 0xe7, 0xb0, 0x2a, 0x1b, 0x65, 0x76, 0x6d, 0x6f, 0x73,
-	0x2f, 0x78, 0x2f, 0x65, 0x76, 0x6d, 0x2f, 0x4d, 0x73, 0x67, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
-	0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x22, 0x19, 0x0a, 0x17, 0x4d, 0x73, 0x67, 0x55, 0x70, 0x64,
-	0x61, 0x74, 0x65, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x37, 0x0a, 0x0d, 0x4d, 0x73, 0x67, 0x45, 0x74, 0x68, 0x65, 0x72, 0x65, 0x75, 0x6d,
-	0x54, 0x78, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x72, 0x65, 0x61, 0x74, 0x6f, 0x72, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x72, 0x65, 0x61, 0x74, 0x6f, 0x72, 0x3a, 0x0c, 0x82, 0xe7,
+	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x19, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x61, 0x6e, 0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22,
+	0xaf, 0x01, 0x0a, 0x0f, 0x4d, 0x73, 0x67, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x61, 0x72,
+	0x61, 0x6d, 0x73, 0x12, 0x36, 0x0a, 0x09, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x74, 0x79,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d,
+	0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67,
+	0x52, 0x09, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x74, 0x79, 0x12, 0x34, 0x0a, 0x06, 0x70,
+	0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x65, 0x76,
+	0x6d, 0x6f, 0x73, 0x2e, 0x65, 0x76, 0x6d, 0x2e, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x42, 0x09,
+	0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d,
+	0x73, 0x3a, 0x2e, 0x82, 0xe7, 0xb0, 0x2a, 0x09, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x74,
+	0x79, 0x8a, 0xe7, 0xb0, 0x2a, 0x1b, 0x65, 0x76, 0x6d, 0x6f, 0x73, 0x2f, 0x78, 0x2f, 0x65, 0x76,
+	0x6d, 0x2f, 0x4d, 0x73, 0x67, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x61, 0x72, 0x61, 0x6d,
+	0x73, 0x22, 0x19, 0x0a, 0x17, 0x4d, 0x73, 0x67, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x61,
+	0x72, 0x61, 0x6d, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xbb, 0x01, 0x0a,
+	0x0d, 0x4d, 0x73, 0x67, 0x45, 0x74, 0x68, 0x65, 0x72, 0x65, 0x75, 0x6d, 0x54, 0x78, 0x12, 0x18,
+	0x0a, 0x07, 0x63, 0x72, 0x65, 0x61, 0x74, 0x6f, 0x72, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x07, 0x63, 0x72, 0x65, 0x61, 0x74, 0x6f, 0x72, 0x12, 0x28, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x41, 0x6e, 0x79, 0x52, 0x04, 0x64, 0x61,
+	0x74, 0x61, 0x12, 0x1e, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01,
+	0x42, 0x0a, 0xea, 0xde, 0x1f, 0x01, 0x2d, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x04, 0x73, 0x69,
+	0x7a, 0x65, 0x12, 0x24, 0x0a, 0x04, 0x68, 0x61, 0x73, 0x68, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
+	0x42, 0x10, 0xf2, 0xde, 0x1f, 0x07, 0x72, 0x6c, 0x70, 0x3a, 0x22, 0x2d, 0x22, 0xa8, 0xe7, 0xb0,
+	0x2a, 0x01, 0x52, 0x04, 0x68, 0x61, 0x73, 0x68, 0x12, 0x12, 0x0a, 0x04, 0x66, 0x72, 0x6f, 0x6d,
+	0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x66, 0x72, 0x6f, 0x6d, 0x3a, 0x0c, 0x82, 0xe7,
 	0xb0, 0x2a, 0x07, 0x63, 0x72, 0x65, 0x61, 0x74, 0x6f, 0x72, 0x22, 0x17, 0x0a, 0x15, 0x4d, 0x73,
 	0x67, 0x45, 0x74, 0x68, 0x65, 0x72, 0x65, 0x75, 0x6d, 0x54, 0x78, 0x52, 0x65, 0x73, 0x70, 0x6f,
 	0x6e, 0x73, 0x65, 0x32, 0xa6, 0x01, 0x0a, 0x03, 0x4d, 0x73, 0x67, 0x12, 0x4e, 0x0a, 0x0c, 0x55,
@@ -1865,18 +2165,20 @@ var file_evmos_evm_tx_proto_goTypes = []interface{}{
 	(*MsgEthereumTx)(nil),           // 2: evmos.evm.MsgEthereumTx
 	(*MsgEthereumTxResponse)(nil),   // 3: evmos.evm.MsgEthereumTxResponse
 	(*Params)(nil),                  // 4: evmos.evm.Params
+	(*anypb.Any)(nil),               // 5: google.protobuf.Any
 }
 var file_evmos_evm_tx_proto_depIdxs = []int32{
 	4, // 0: evmos.evm.MsgUpdateParams.params:type_name -> evmos.evm.Params
-	0, // 1: evmos.evm.Msg.UpdateParams:input_type -> evmos.evm.MsgUpdateParams
-	2, // 2: evmos.evm.Msg.EthereumTx:input_type -> evmos.evm.MsgEthereumTx
-	1, // 3: evmos.evm.Msg.UpdateParams:output_type -> evmos.evm.MsgUpdateParamsResponse
-	3, // 4: evmos.evm.Msg.EthereumTx:output_type -> evmos.evm.MsgEthereumTxResponse
-	3, // [3:5] is the sub-list for method output_type
-	1, // [1:3] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	5, // 1: evmos.evm.MsgEthereumTx.data:type_name -> google.protobuf.Any
+	0, // 2: evmos.evm.Msg.UpdateParams:input_type -> evmos.evm.MsgUpdateParams
+	2, // 3: evmos.evm.Msg.EthereumTx:input_type -> evmos.evm.MsgEthereumTx
+	1, // 4: evmos.evm.Msg.UpdateParams:output_type -> evmos.evm.MsgUpdateParamsResponse
+	3, // 5: evmos.evm.Msg.EthereumTx:output_type -> evmos.evm.MsgEthereumTxResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_evmos_evm_tx_proto_init() }

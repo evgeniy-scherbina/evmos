@@ -7,6 +7,7 @@ import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "evmos/evm/params.proto";
+import "google/protobuf/any.proto";
 
 option go_package = "evmos/x/evm/types";
 
@@ -37,9 +38,22 @@ message MsgUpdateParams {
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
 
+// MsgEthereumTx encapsulates an Ethereum transaction as an SDK message.
 message MsgEthereumTx {
   option (cosmos.msg.v1.signer) = "creator";
-  string creator = 1;
+  string creator = 5;
+
+  // data is inner transaction data of the Ethereum transaction
+  google.protobuf.Any data = 1;
+
+  // size is the encoded storage size of the transaction (DEPRECATED)
+  double size = 2 [(gogoproto.jsontag) = "-", (amino.dont_omitempty) = true];
+  // hash of the transaction in hex format
+  string hash = 3 [(gogoproto.moretags) = "rlp:\"-\"", (amino.dont_omitempty) = true];
+  // from is the ethereum signer address in hex format. This address value is checked
+  // against the address derived from the signature (V, R, S) using the
+  // secp256k1 elliptic curve
+  string from = 4;
 }
 
 message MsgEthereumTxResponse {}
