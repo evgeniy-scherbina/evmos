@@ -10,9 +10,12 @@ import (
 
 func (k msgServer) EthereumTx(goCtx context.Context, msg *types.MsgEthereumTx) (*types.MsgEthereumTxResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// TODO: Handling the message
 	_ = ctx
+
+	sender := msg.From
+	tx := msg.AsTransaction()
+
+	_, _ = sender, tx
 
 	return &types.MsgEthereumTxResponse{}, nil
 }

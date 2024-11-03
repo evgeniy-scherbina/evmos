@@ -40,6 +40,7 @@ message MsgUpdateParamsResponse {}
 
 // MsgEthereumTx encapsulates an Ethereum transaction as an SDK message.
 message MsgEthereumTx {
+  // TODO(yevhenii): remove creator field
   option (cosmos.msg.v1.signer) = "creator";
   string creator = 5;
 
