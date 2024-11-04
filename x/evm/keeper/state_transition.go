@@ -5,6 +5,7 @@ import (
 	"evmos/x/evm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
+	"math/big"
 )
 
 // ApplyTransaction runs and attempts to perform a state transition with the given transaction (i.e Message), that will
@@ -31,8 +32,17 @@ func (k *Keeper) ApplyTransaction(ctx sdk.Context, tx *ethtypes.Transaction) (*t
 	}
 	txConfig := k.TxConfig(ctx, tx.Hash())
 
+	// get the signer according to the chain rules from the config and block height
+	signer := ethtypes.MakeSigner(cfg.ChainConfig, big.NewInt(ctx.BlockHeight()))
+	msg, err := tx.AsMessage(signer, cfg.BaseFee)
+	if err != nil {
+		return nil, errorsmod.Wrap(err, "failed to return ethereum transaction as core message")
+	}
+
 	_ = cfg
 	_ = txConfig
+	_ = signer
+	_ = msg
 
 	// TODO(yevhenii): return proper response
 	return nil, nil
