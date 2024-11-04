@@ -29,9 +29,10 @@ func (k *Keeper) ApplyTransaction(ctx sdk.Context, tx *ethtypes.Transaction) (*t
 	if err != nil {
 		return nil, errorsmod.Wrap(err, "failed to load evm config")
 	}
-	//txConfig := k.TxConfig(ctx, tx.Hash())
+	txConfig := k.TxConfig(ctx, tx.Hash())
 
 	_ = cfg
+	_ = txConfig
 
 	// TODO(yevhenii): return proper response
 	return nil, nil

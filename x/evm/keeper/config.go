@@ -4,6 +4,7 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	"evmos/x/evm/statedb"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/ethereum/go-ethereum/common"
 	"math/big"
 )
 
@@ -25,4 +26,14 @@ func (k *Keeper) EVMConfig(ctx sdk.Context, proposerAddress sdk.ConsAddress, cha
 		CoinBase:    coinbase,
 		BaseFee:     baseFee,
 	}, nil
+}
+
+// TxConfig loads `TxConfig` from current transient storage
+func (k *Keeper) TxConfig(ctx sdk.Context, txHash common.Hash) statedb.TxConfig {
+	return statedb.NewTxConfig(
+		common.BytesToHash(ctx.HeaderHash()), // BlockHash
+		txHash,                               // TxHash
+		0,                                    // TODO(yevhenii): fix it; // uint(k.GetTxIndexTransient(ctx)),     // TxIndex
+		0,                                    // TODO(yevhenii): fix it; // uint(k.GetLogSizeTransient(ctx)),     // LogIndex
+	)
 }
